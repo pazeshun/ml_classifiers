@@ -19,6 +19,8 @@
 
   <build_depend>message_generation</build_depend>
 
+  <build_depend>roslint</build_depend>
+
   <depend>std_msgs</depend>
   <depend>roscpp</depend>
   <depend>roslib</depend>

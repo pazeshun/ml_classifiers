@@ -3,19 +3,33 @@ cmake_minimum_required(VERSION 2.8.3)
 project(ml_classifiers)
 
 find_package(catkin REQUIRED
-  COMPONENTS message_generation std_msgs roscpp pluginlib)
+  COMPONENTS
+  message_generation
+  std_msgs
+  roscpp
+  pluginlib
+  roslint
+)
+
 find_package(Eigen3 REQUIRED)
 
 set(Eigen3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
 
 add_message_files(FILES
   ClassDataPoint.msg
-  DIRECTORY msg)
+  DIRECTORY msg
+)
 
 add_service_files(FILES
-  AddClassData.srv ClassifyData.srv 	ClearClassifier.srv 	CreateClassifier.srv
-  LoadClassifier.srv SaveClassifier.srv TrainClassifier.srv
-  DIRECTORY srv)
+  AddClassData.srv
+  ClassifyData.srv
+  ClearClassifier.srv
+  CreateClassifier.srv
+  LoadClassifier.srv
+  SaveClassifier.srv
+  TrainClassifier.srv
+  DIRECTORY srv
+)
 
 generate_messages(DEPENDENCIES std_msgs)
 
@@ -36,6 +50,8 @@ add_library(SVMClassifier src/svm_classifier.cpp src/libsvm-3.14/svm.cpp)
 add_executable(classifier_server nodes/classifier_server.cpp)
 target_link_libraries(classifier_server ${catkin_LIBRARIES})
 add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
+
+roslint_cpp()
 
 install(TARGETS classifier_server ZeroClassifier NearestNeighborClassifier SVMClassifier
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

@@ -58,158 +58,170 @@ pluginlib::ClassLoader<Classifier> c_loader("ml_classifiers", "ml_classifiers::C
 
 bool createHelper(string class_type, boost::shared_ptr<Classifier>& c)
 {
-    try{
-        c = c_loader.createInstance(class_type);
-    }
-    catch(pluginlib::PluginlibException& ex){
-        ROS_ERROR("Classifer plugin failed to load! Error: %s", ex.what());
-    }
-    
-    return true;
+  try
+  {
+    c = c_loader.createInstance(class_type);
+  }
+  catch (pluginlib::PluginlibException& ex)
+  {
+    ROS_ERROR("Classifer plugin failed to load! Error: %s", ex.what());
+  }
+
+  return true;
 }
 
 
 bool createCallback(CreateClassifier::Request &req,
-                    CreateClassifier::Response &res )
+                    CreateClassifier::Response &res)
 {
-    string id = req.identifier;
-    boost::shared_ptr<Classifier> c;
-    
-    if (!createHelper(req.class_type, c)){
-        res.success = false;
-        return false;
-    }
-    
-    if (classifier_list.find(id) != classifier_list.end()){
-        cout << "WARNING: ID already exists, overwriting: " << req.identifier << endl;
-        classifier_list.erase(id);
-    }
-    classifier_list[id] = c;
-    
-    res.success = true;
-    return true;
+  string id = req.identifier;
+  boost::shared_ptr<Classifier> c;
+
+  if (!createHelper(req.class_type, c))
+  {
+    res.success = false;
+    return false;
+  }
+
+  if (classifier_list.find(id) != classifier_list.end())
+  {
+    cout << "WARNING: ID already exists, overwriting: " << req.identifier << endl;
+    classifier_list.erase(id);
+  }
+  classifier_list[id] = c;
+
+  res.success = true;
+  return true;
 }
 
 
 bool addCallback(AddClassData::Request &req,
-                 AddClassData::Response &res )
+                 AddClassData::Response &res)
 {
-    string id = req.identifier;
-    if(classifier_list.find(id) == classifier_list.end()){    
-        res.success = false;
-        return false;
-    }
-    
-    for(size_t i=0; i<req.data.size(); i++)
-        classifier_list[id]->addTrainingPoint(req.data[i].target_class, req.data[i].point);
-    
-    res.success = true;
-    return true;
+  string id = req.identifier;
+  if (classifier_list.find(id) == classifier_list.end())
+  {
+    res.success = false;
+    return false;
+  }
+
+  for (size_t i = 0; i < req.data.size(); i++)
+    classifier_list[id]->addTrainingPoint(req.data[i].target_class, req.data[i].point);
+
+  res.success = true;
+  return true;
 }
 
 
 bool trainCallback(TrainClassifier::Request &req,
-                   TrainClassifier::Response &res )
+                   TrainClassifier::Response &res)
 {
-    string id = req.identifier;
-    if(classifier_list.find(id) == classifier_list.end()){    
-        res.success = false;
-        return false;
-    }
-    
-    cout << "Training " << id << endl;
-    
-    classifier_list[id]->train();
-    res.success = true;
-    return true;
+  string id = req.identifier;
+  if (classifier_list.find(id) == classifier_list.end())
+  {
+    res.success = false;
+    return false;
+  }
+
+  cout << "Training " << id << endl;
+
+  classifier_list[id]->train();
+  res.success = true;
+  return true;
 }
 
 
 bool clearCallback(ClearClassifier::Request &req,
-                   ClearClassifier::Response &res )
+                   ClearClassifier::Response &res)
 {
-    string id = req.identifier;
-    if(classifier_list.find(id) == classifier_list.end()){    
-        res.success = false;
-        return false;
-    }
-    
-    classifier_list[id]->clear();
-    res.success = true;
-    return true;
+  string id = req.identifier;
+  if (classifier_list.find(id) == classifier_list.end())
+  {
+    res.success = false;
+    return false;
+  }
+
+  classifier_list[id]->clear();
+  res.success = true;
+  return true;
 }
 
 
 bool saveCallback(SaveClassifier::Request &req,
-                  SaveClassifier::Response &res )
+                  SaveClassifier::Response &res)
 {
-    string id = req.identifier;
-    if(classifier_list.find(id) == classifier_list.end()){    
-        res.success = false;
-        return false;
-    }
-    
-    classifier_list[id]->save(req.filename);
-    res.success = true;
-    return true;
+  string id = req.identifier;
+  if (classifier_list.find(id) == classifier_list.end())
+  {
+    res.success = false;
+    return false;
+  }
+
+  classifier_list[id]->save(req.filename);
+  res.success = true;
+  return true;
 }
 
 
 bool loadCallback(LoadClassifier::Request &req,
-                  LoadClassifier::Response &res )
+                  LoadClassifier::Response &res)
 {
-    string id = req.identifier;
-    
-    boost::shared_ptr<Classifier> c;
-    if(!createHelper(req.class_type, c)){
-        res.success = false;
-        return false;
-    }
-    
-    if(!c->load(req.filename)){
-        res.success = false;
-        return false;
-    }
-    
-    if(classifier_list.find(id) != classifier_list.end()){
-        cout << "WARNING: ID already exists, overwriting: " << req.identifier << endl;
-        classifier_list.erase(id);
-    }
-    classifier_list[id] = c;
-    
-    res.success = true;
-    return true;
+  string id = req.identifier;
+
+  boost::shared_ptr<Classifier> c;
+  if (!createHelper(req.class_type, c))
+  {
+    res.success = false;
+    return false;
+  }
+
+  if (!c->load(req.filename))
+  {
+    res.success = false;
+    return false;
+  }
+
+  if (classifier_list.find(id) != classifier_list.end())
+  {
+    cout << "WARNING: ID already exists, overwriting: " << req.identifier << endl;
+    classifier_list.erase(id);
+  }
+  classifier_list[id] = c;
+
+  res.success = true;
+  return true;
 }
 
 
 bool classifyCallback(ClassifyData::Request &req,
-                      ClassifyData::Response &res )
+                      ClassifyData::Response &res)
 {
-    string id = req.identifier;
-    for(size_t i=0; i<req.data.size(); i++){
-        string class_num = classifier_list[id]->classifyPoint(req.data[i].point);
-        res.classifications.push_back(class_num);
-    }
-    
-    return true;
+  string id = req.identifier;
+  for (size_t i = 0; i < req.data.size(); i++)
+  {
+    string class_num = classifier_list[id]->classifyPoint(req.data[i].point);
+    res.classifications.push_back(class_num);
+  }
+
+  return true;
 }
 
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "classifier_server");
-    ros::NodeHandle n;
-    
-    ros::ServiceServer service1 = n.advertiseService("/ml_classifiers/create_classifier", createCallback);
-    ros::ServiceServer service2 = n.advertiseService("/ml_classifiers/add_class_data", addCallback);
-    ros::ServiceServer service3 = n.advertiseService("/ml_classifiers/train_classifier", trainCallback);
-    ros::ServiceServer service4 = n.advertiseService("/ml_classifiers/clear_classifier", clearCallback);
-    ros::ServiceServer service5 = n.advertiseService("/ml_classifiers/save_classifier", saveCallback);
-    ros::ServiceServer service6 = n.advertiseService("/ml_classifiers/load_classifier", loadCallback);
-    ros::ServiceServer service7 = n.advertiseService("/ml_classifiers/classify_data", classifyCallback);
-    
-    ROS_INFO("Classifier services now ready");
-    ros::spin();
+  ros::init(argc, argv, "classifier_server");
+  ros::NodeHandle n;
 
-    return 0;
+  ros::ServiceServer service1 = n.advertiseService("/ml_classifiers/create_classifier", createCallback);
+  ros::ServiceServer service2 = n.advertiseService("/ml_classifiers/add_class_data", addCallback);
+  ros::ServiceServer service3 = n.advertiseService("/ml_classifiers/train_classifier", trainCallback);
+  ros::ServiceServer service4 = n.advertiseService("/ml_classifiers/clear_classifier", clearCallback);
+  ros::ServiceServer service5 = n.advertiseService("/ml_classifiers/save_classifier", saveCallback);
+  ros::ServiceServer service6 = n.advertiseService("/ml_classifiers/load_classifier", loadCallback);
+  ros::ServiceServer service7 = n.advertiseService("/ml_classifiers/classify_data", classifyCallback);
+
+  ROS_INFO("Classifier services now ready");
+  ros::spin();
+
+  return 0;
 }

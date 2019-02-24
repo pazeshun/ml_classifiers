@@ -7,17 +7,17 @@
 #include "interface.h"
 void svm_toy_initialize();
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   GtkWidget *window;
 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  gtk_set_locale();
+  gtk_init(&argc, &argv);
 
-  window = create_window ();
-  gtk_widget_show (window);
+  window = create_window();
+  gtk_widget_show(window);
 
   svm_toy_initialize();
-  gtk_main ();
+  gtk_main();
   return 0;
 }

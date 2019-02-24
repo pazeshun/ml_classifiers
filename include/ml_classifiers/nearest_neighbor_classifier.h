@@ -43,26 +43,27 @@
 
 #include "classifier.h"
 
-namespace ml_classifiers{
-    
-typedef std::vector<double> CPoint;    
+namespace ml_classifiers
+{
+
+typedef std::vector<double> CPoint;
 typedef std::vector<CPoint> CPointList;
-typedef std::map<std::string,CPointList> ClassMap;
-    
+typedef std::map<std::string, CPointList> ClassMap;
+
 class NearestNeighborClassifier : public Classifier
 {
 public:
-    ClassMap class_data;
-    
-    NearestNeighborClassifier();
-    ~NearestNeighborClassifier();
-    
-    void save(const std::string filename);
-    bool load(const std::string filename);
-    void addTrainingPoint(std::string target_class, const std::vector<double> point);
-    void train();
-    void clear();
-    std::string classifyPoint(const std::vector<double> point);
+  ClassMap class_data;
+
+  NearestNeighborClassifier();
+  ~NearestNeighborClassifier();
+
+  void save(const std::string filename);
+  bool load(const std::string filename);
+  void addTrainingPoint(std::string target_class, const std::vector<double> point);
+  void train();
+  void clear();
+  std::string classifyPoint(const std::vector<double> point);
 };
 
 } /* End namespace */

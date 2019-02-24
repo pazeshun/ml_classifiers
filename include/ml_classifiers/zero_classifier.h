@@ -43,20 +43,21 @@
 
 #include "classifier.h"
 
-namespace ml_classifiers{
+namespace ml_classifiers
+{
 
 class ZeroClassifier : public Classifier
 {
 public:
-    ZeroClassifier();
-    ~ZeroClassifier();
-    
-    void save(const std::string filename);
-    bool load(const std::string filename);
-    void addTrainingPoint(std::string target_class, const std::vector<double> point);
-    void train();
-    void clear();
-    std::string classifyPoint(const std::vector<double> point);
+  ZeroClassifier();
+  ~ZeroClassifier();
+
+  void save(const std::string filename);
+  bool load(const std::string filename);
+  void addTrainingPoint(std::string target_class, const std::vector<double> point);
+  void train();
+  void clear();
+  std::string classifyPoint(const std::vector<double> point);
 };
 
 } /* End namespace */

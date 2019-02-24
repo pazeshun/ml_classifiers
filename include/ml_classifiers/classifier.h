@@ -43,20 +43,21 @@
 
 #include "ros/ros.h"
 
-namespace ml_classifiers{
+namespace ml_classifiers
+{
 
 class Classifier
 {
 public:
-    Classifier(){};
-    virtual ~Classifier(){};
-    
-    virtual void save(const std::string filename) = 0;
-    virtual bool load(const std::string filename) = 0;
-    virtual void addTrainingPoint(std::string target_class, const std::vector<double> point) = 0;
-    virtual void train() = 0;
-    virtual void clear() = 0;
-    virtual std::string classifyPoint(const std::vector<double> point) = 0;
+  Classifier() {};
+  virtual ~Classifier() {};
+
+  virtual void save(const std::string filename) = 0;
+  virtual bool load(const std::string filename) = 0;
+  virtual void addTrainingPoint(std::string target_class, const std::vector<double> point) = 0;
+  virtual void train() = 0;
+  virtual void clear() = 0;
+  virtual std::string classifyPoint(const std::vector<double> point) = 0;
 };
 
 } /* End namespace */

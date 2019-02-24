@@ -6,8 +6,8 @@
 extern "C" {
 #endif
 
-GtkWidget* create_window (void);
-GtkWidget* create_fileselection (void);
+GtkWidget* create_window(void);
+GtkWidget* create_fileselection(void);
 
 #ifdef __cplusplus
 }
