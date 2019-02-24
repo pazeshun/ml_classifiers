@@ -53,7 +53,7 @@ using namespace ml_classifiers;
 using namespace std;
 
 
-map<string, boost::shared_ptr<Classifier>> classifier_list;
+map<string, boost::shared_ptr<Classifier> > classifier_list;
 pluginlib::ClassLoader<Classifier> c_loader("ml_classifiers", "ml_classifiers::Classifier");
 
 bool createHelper(string class_type, boost::shared_ptr<Classifier>& c)
