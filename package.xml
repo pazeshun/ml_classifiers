@@ -8,7 +8,9 @@
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/ml_classifiers</url>
+  <url type="website">http://wiki.ros.org/ml_classifiers</url>
+  <url type="repository">https://github.com/astuff/ml_classifiers</url>
+  <url type="bugtracker">https://github.com/astuff/ml_classifiers/issues</url>
 
   <author email="sniekum@cs.utexas.edu">Scott Niekum</author>
   <author email="jwhitley@autonomoustuff.com">Joshua Whitley</author>
