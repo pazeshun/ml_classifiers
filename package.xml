@@ -4,13 +4,13 @@
   <version>0.3.1</version>
   <description>ml_classifiers</description>
 
-  <maintainer email="sniekum@cs.umass.edu">Scott Niekum</maintainer>
+  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Development Team</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://ros.org/wiki/ml_classifiers</url>
 
-  <author>Scott Niekum</author>
+  <author email="sniekum@cs.utexas.edu">Scott Niekum</author>
   <author email="jwhitley@autonomoustuff.com">Joshua Whitley</author>
 
   <buildtool_depend>catkin</buildtool_depend>
