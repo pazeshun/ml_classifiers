@@ -37,7 +37,7 @@
 #ifndef ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
 #define ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
 
-#include "classifier.h"
+#include "ml_classifiers/classifier.h"
 
 #include <map>
 #include <string>

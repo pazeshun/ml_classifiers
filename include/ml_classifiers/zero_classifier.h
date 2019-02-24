@@ -34,14 +34,13 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
+#ifndef ML_CLASSIFIERS_ZERO_CLASSIFIER_H
+#define ML_CLASSIFIERS_ZERO_CLASSIFIER_H
 
-#ifndef ZERO_CLASSIFIER_H_
-#define ZERO_CLASSIFIER_H_
+#include "ml_classifiers/classifier.h"
 
-#include "classifier.h"
+#include <string>
+#include <vector>
 
 namespace ml_classifiers
 {
@@ -60,5 +59,6 @@ public:
   std::string classifyPoint(const std::vector<double> point);
 };
 
-} /* End namespace */
-#endif /* ZERO_CLASSIFIER_H_ */
+}  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS_ZERO_CLASSIFIER_H

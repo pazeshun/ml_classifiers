@@ -44,7 +44,7 @@ add_definitions(${EIGEN3_DEFINITIONS})
 
 include_directories(
   include
-  src/libsvm-3.14
+  src
   ${EIGEN3_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
@@ -56,10 +56,21 @@ add_executable(classifier_server nodes/classifier_server.cpp)
 target_link_libraries(classifier_server ${catkin_LIBRARIES})
 add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
 
-roslint_cpp()
+roslint_cpp(
+  include/ml_classifiers/classifier.h
+  include/ml_classifiers/nearest_neighbor_classifier.h
+  include/ml_classifiers/svm_classifier.h
+  include/ml_classifiers/zero_classifier.h
+  nodes/classifier_server.cpp
+  src/nearest_neighbor_classifier.cpp
+  src/svm_classifier.cpp
+  src/zero_classifier.cpp
+)
 
 install(TARGETS classifier_server ZeroClassifier NearestNeighborClassifier SVMClassifier
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+roslint_add_test()

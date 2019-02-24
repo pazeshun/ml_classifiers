@@ -39,14 +39,17 @@
 
 #include "ros/ros.h"
 
+#include <string>
+#include <vector>
+
 namespace ml_classifiers
 {
 
 class Classifier
 {
 public:
-  Classifier() {};
-  virtual ~Classifier() {};
+  Classifier() {}
+  virtual ~Classifier() {}
 
   virtual void save(const std::string filename) = 0;
   virtual bool load(const std::string filename) = 0;
