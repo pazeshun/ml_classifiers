@@ -42,7 +42,12 @@ catkin_package(
 
 add_definitions(${EIGEN3_DEFINITIONS})
 
-include_directories(include ${EIGEN3_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
+include_directories(
+  include
+  src/libsvm-3.14
+  ${EIGEN3_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+)
 
 add_library(ZeroClassifier src/zero_classifier.cpp) 
 add_library(NearestNeighborClassifier src/nearest_neighbor_classifier.cpp)

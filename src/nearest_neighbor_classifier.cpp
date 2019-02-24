@@ -34,15 +34,11 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
-
 #include "ml_classifiers/nearest_neighbor_classifier.h"
 #include <pluginlib/class_list_macros.h>
 
 #include <string>
+#include <vector>
 
 PLUGINLIB_EXPORT_CLASS(ml_classifiers::NearestNeighborClassifier, ml_classifiers::Classifier)
 
@@ -107,5 +103,4 @@ std::string NearestNeighborClassifier::classifyPoint(const std::vector<double> p
   return ans;
 }
 
-}
-
+}  // namespace ml_classifiers

@@ -34,15 +34,11 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
-
 #include "ml_classifiers/zero_classifier.h"
 #include <pluginlib/class_list_macros.h>
 
 #include <string>
+#include <vector>
 
 PLUGINLIB_EXPORT_CLASS(ml_classifiers::ZeroClassifier, ml_classifiers::Classifier)
 
@@ -65,5 +61,4 @@ std::string ZeroClassifier::classifyPoint(const std::vector<double> point)
   return "0";
 }
 
-}
-
+}  // namespace ml_classifiers

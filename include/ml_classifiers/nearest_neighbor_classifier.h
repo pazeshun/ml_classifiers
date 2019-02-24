@@ -34,14 +34,14 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
-#ifndef NEAREST_NEIGHBOR_CLASSIFIER_H_
-#define NEAREST_NEIGHBOR_CLASSIFIER_H_
+#ifndef ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
+#define ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
 
 #include "classifier.h"
+
+#include <map>
+#include <string>
+#include <vector>
 
 namespace ml_classifiers
 {
@@ -66,5 +66,6 @@ public:
   std::string classifyPoint(const std::vector<double> point);
 };
 
-} /* End namespace */
-#endif /* NEAREST_NEIGHBOR_CLASSIFIER_H_ */
+}  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H

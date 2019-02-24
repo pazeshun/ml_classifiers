@@ -34,12 +34,8 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
-#ifndef CLASSIFIER_H_
-#define CLASSIFIER_H_
+#ifndef ML_CLASSIFIERS_CLASSIFIER_H
+#define ML_CLASSIFIERS_CLASSIFIER_H
 
 #include "ros/ros.h"
 
@@ -60,5 +56,6 @@ public:
   virtual std::string classifyPoint(const std::vector<double> point) = 0;
 };
 
-} /* End namespace */
-#endif /* CLASSIFIER_H_ */
+}  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS_CLASSIFIER_H

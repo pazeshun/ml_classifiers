@@ -34,15 +34,11 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
-#ifndef SVM_CLASSIFIER_H_
-#define SVM_CLASSIFIER_H_
+#ifndef ML_CLASSIFIERS_SVM_CLASSIFIER_H
+#define ML_CLASSIFIERS_SVM_CLASSIFIER_H
 
 #include "classifier.h"
-#include "../../src/libsvm-3.14/svm.h"
+#include "svm.h"
 
 namespace ml_classifiers
 {
@@ -72,5 +68,6 @@ public:
   std::string classifyPoint(const std::vector<double> point);
 };
 
-} /* End namespace */
-#endif /* SVM_CLASSIFIER_H_ */
+}  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS_SVM_CLASSIFIER_H

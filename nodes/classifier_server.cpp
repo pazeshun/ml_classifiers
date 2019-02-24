@@ -34,10 +34,6 @@
  *
  *********************************************************************/
 
-/**
-  * \author Scott Niekum
-  */
-
 #include "ml_classifiers/zero_classifier.h"
 #include "ml_classifiers/nearest_neighbor_classifier.h"
 #include "ml_classifiers/CreateClassifier.h"
@@ -49,11 +45,15 @@
 #include "ml_classifiers/ClassifyData.h"
 #include <pluginlib/class_loader.h>
 
-using namespace ml_classifiers;
-using namespace std;
+#include <string>
+#include <map>
 
+using namespace ml_classifiers;  // NOLINT
+using std::string;
+using std::cout;
+using std::endl;
 
-map<string, boost::shared_ptr<Classifier> > classifier_list;
+std::map<string, boost::shared_ptr<Classifier> > classifier_list;
 pluginlib::ClassLoader<Classifier> c_loader("ml_classifiers", "ml_classifiers::Classifier");
 
 bool createHelper(string class_type, boost::shared_ptr<Classifier>& c)
