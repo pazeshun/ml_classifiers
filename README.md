@@ -1,4 +1,4 @@
-# Machine Learning Classifiers for ROS (ml_classifiers #
+# Machine Learning Classifiers for ROS (ml_classifiers) #
 
 [![CircleCI](https://circleci.com/gh/astuff/ml_classifiers.svg?style=svg)](https://circleci.com/gh/astuff/ml_classifiers)
 
