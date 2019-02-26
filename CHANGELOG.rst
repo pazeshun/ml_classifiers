@@ -2,8 +2,8 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2019-02-26)
+------------------
 * Updating URLs in package.xml.
 * Updating README and package.xml with new data.
 * Merge pull request `#1 <https://github.com/astuff/ml_classifiers/issues/1>`_ from sniekum/master
