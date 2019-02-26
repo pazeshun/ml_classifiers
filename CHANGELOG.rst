@@ -2,6 +2,25 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updating URLs in package.xml.
+* Updating README and package.xml with new data.
+* Merge pull request `#1 <https://github.com/astuff/ml_classifiers/issues/1>`_ from sniekum/master
+  Merging from upstream before taking ownership.
+* CI: Adding CircleCI tests.
+* Replacing createClassInstance with createInstance in pluginlib.
+* Merge pull request `#7 <https://github.com/astuff/ml_classifiers/issues/7>`_ from astuff/melodic-devel
+  Melodic fixes.
+* Fixed compilation problems in Melodic.
+* Fixing CMakeLists.txt and updating package.xml to version 2.
+* Merge pull request `#6 <https://github.com/astuff/ml_classifiers/issues/6>`_ from wkentaro/migration-to-jade
+  [ml_classifers] eigen -> Eigen3 in CMakeLists.txt
+  See: http://wiki.ros.org/jade/Migration#Eigen_CMake_Module_in_cmake_modules
+* Merge pull request `#3 <https://github.com/astuff/ml_classifiers/issues/3>`_ from jolting/indigo-devel
+  Fix build for Indigo
+* Contributors: Joshua Whitley, Kentaro Wada, Scott Niekum
+
 0.3.1 (2014-09-15)
 ------------------
 * Fix build for indigo
