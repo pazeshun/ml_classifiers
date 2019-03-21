@@ -2,6 +2,13 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replacing typedefs with aliases.
+* Add run_tests hook for roslint.
+* Adding C++11 specifier.
+* Contributors: Joshua Whitley
+
 0.4.0 (2019-02-26)
 ------------------
 * Updating URLs in package.xml.
