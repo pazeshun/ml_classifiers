@@ -47,9 +47,9 @@
 namespace ml_classifiers
 {
 
-typedef std::vector<double> CPoint;
-typedef std::vector<CPoint> CPointList;
-typedef std::map<std::string, CPointList> ClassMap;
+using CPoint = std::vector<double>;
+using CPointList = std::vector<CPoint>;
+using ClassMap = std::map<std::string, CPointList>;
 
 class SVMClassifier : public Classifier
 {
