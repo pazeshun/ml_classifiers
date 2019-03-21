@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>ml_classifiers</name>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <description>ml_classifiers</description>
 
   <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Development Team</maintainer>
