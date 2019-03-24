@@ -71,7 +71,6 @@ elseif(${ROS_VERSION} EQUAL 2)
   endif()
 
   find_package(ament_cmake REQUIRED)
-  find_package(builtin_interfaces REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
   find_package(pluginlib REQUIRED)
   find_package(std_msgs REQUIRED)
@@ -82,7 +81,7 @@ elseif(${ROS_VERSION} EQUAL 2)
     ${EIGEN3_INCLUDE_DIRS}
   )
 
-  rosidl_generate_interfaces(${PROJECT_NAME}_msgs
+  rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
     "msg/ClassDataPoint.msg"
     "srv/AddClassData.srv"
     "srv/ClassifyData.srv"
@@ -91,7 +90,7 @@ elseif(${ROS_VERSION} EQUAL 2)
     "srv/LoadClassifier.srv"
     "srv/SaveClassifier.srv"
     "srv/TrainClassifier.srv"
-    DEPENDENCIES builtin_interfaces std_msgs
+    DEPENDENCIES std_msgs
   )
 
 endif()
@@ -137,29 +136,32 @@ if(${ROS_VERSION} EQUAL 1)
 
 elseif(${ROS_VERSION} EQUAL 2)
 
+  set(dependencies
+    pluginlib)
+
   add_executable(classifier_server
     nodes/ros2_classifier_server.cpp)
 
   ament_target_dependencies(NearestNeighborClassifier
-    "pluginlib")
+    ${dependencies})
 
   ament_target_dependencies(SVMClassifier
-    "pluginlib")
+    ${dependencies})
 
   ament_target_dependencies(ZeroClassifier
-    "pluginlib")
+    ${dependencies})
 
   ament_target_dependencies(classifier_server
     "rclcpp"
-    "pluginlib")
+    ${dependencies})
 
   target_include_directories(classifier_server PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-#  rosidl_target_interfaces(classifier_server
-#    ${PROJECT_NAME}_msgs
-#    "rosidl_typesupport_cpp")
+  rosidl_target_interfaces(classifier_server
+    ${PROJECT_NAME}_interfaces
+    "rosidl_typesupport_cpp")
 
   ament_export_dependencies(rosidl_default_runtime)
   ament_export_dependencies(pluginlib)
