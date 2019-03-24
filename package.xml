@@ -33,6 +33,7 @@
   <exec_depend condition="$ROS_VERSION == 1">message_runtime</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">rosidl_default_runtime</exec_depend>
 
+  <test_depend condition="$ROS_VERSION == 1">roslint</test_depend>
   <test_depend condition="$ROS_VERSION == 2">ament_lint_auto</test_depend>
   <test_depend condition="$ROS_VERSION == 2">ament_lint_common</test_depend>
 
