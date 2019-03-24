@@ -34,6 +34,8 @@
  *
  *********************************************************************/
 
+#include "ros/ros.h"
+
 #include "ml_classifiers/zero_classifier.h"
 #include "ml_classifiers/nearest_neighbor_classifier.h"
 #include "ml_classifiers/CreateClassifier.h"

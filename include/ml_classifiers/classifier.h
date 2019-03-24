@@ -37,8 +37,6 @@
 #ifndef ML_CLASSIFIERS_CLASSIFIER_H
 #define ML_CLASSIFIERS_CLASSIFIER_H
 
-#include "ros/ros.h"
-
 #include <string>
 #include <vector>
 
