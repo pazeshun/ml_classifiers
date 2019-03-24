@@ -114,16 +114,7 @@ if(${ROS_VERSION} EQUAL 1)
 
   set(ROSLINT_CPP_OPTS "--extensions=h,hpp,cpp")
 
-  roslint_cpp(
-    include/ml_classifiers/classifier.hpp
-    include/ml_classifiers/nearest_neighbor_classifier.hpp
-    include/ml_classifiers/svm_classifier.hpp
-    include/ml_classifiers/zero_classifier.hpp
-    nodes/ros1_classifier_server.cpp
-    src/nearest_neighbor_classifier.cpp
-    src/svm_classifier.cpp
-    src/zero_classifier.cpp
-  )
+  roslint_cpp()
 
   install(TARGETS classifier_server ZeroClassifier NearestNeighborClassifier SVMClassifier
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
