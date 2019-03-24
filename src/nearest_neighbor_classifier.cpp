@@ -34,11 +34,12 @@
  *
  *********************************************************************/
 
-#include "ml_classifiers/nearest_neighbor_classifier.h"
-#include <pluginlib/class_list_macros.h>
+#include "ml_classifiers/nearest_neighbor_classifier.hpp"
+#include <pluginlib/class_list_macros.hpp>
 
 #include <string>
 #include <vector>
+#include <cmath>
 
 PLUGINLIB_EXPORT_CLASS(ml_classifiers::NearestNeighborClassifier, ml_classifiers::Classifier)
 
@@ -85,7 +86,7 @@ std::string NearestNeighborClassifier::classifyPoint(const std::vector<double> p
       double diff = 0;
       for (size_t j = 0; j < dims; j++)
       {
-        diff += fabs(cpl[i][j] - point[j]);
+        diff += std::fabs(cpl[i][j] - point[j]);
       }
       if (first)
       {

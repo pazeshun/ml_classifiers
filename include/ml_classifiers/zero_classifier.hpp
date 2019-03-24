@@ -34,8 +34,10 @@
  *
  *********************************************************************/
 
-#ifndef ML_CLASSIFIERS_CLASSIFIER_H
-#define ML_CLASSIFIERS_CLASSIFIER_H
+#ifndef ML_CLASSIFIERS_ZERO_CLASSIFIER_HPP
+#define ML_CLASSIFIERS_ZERO_CLASSIFIER_HPP
+
+#include "ml_classifiers/classifier.hpp"
 
 #include <string>
 #include <vector>
@@ -43,20 +45,20 @@
 namespace ml_classifiers
 {
 
-class Classifier
+class ZeroClassifier : public Classifier
 {
 public:
-  Classifier() {}
-  virtual ~Classifier() {}
+  ZeroClassifier();
+  ~ZeroClassifier();
 
-  virtual void save(const std::string filename) = 0;
-  virtual bool load(const std::string filename) = 0;
-  virtual void addTrainingPoint(std::string target_class, const std::vector<double> point) = 0;
-  virtual void train() = 0;
-  virtual void clear() = 0;
-  virtual std::string classifyPoint(const std::vector<double> point) = 0;
+  void save(const std::string filename);
+  bool load(const std::string filename);
+  void addTrainingPoint(std::string target_class, const std::vector<double> point);
+  void train();
+  void clear();
+  std::string classifyPoint(const std::vector<double> point);
 };
 
 }  // namespace ml_classifiers
 
-#endif  // ML_CLASSIFIERS_CLASSIFIER_H
+#endif  // ML_CLASSIFIERS_ZERO_CLASSIFIER_HPP

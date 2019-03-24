@@ -34,8 +34,8 @@
  *
  *********************************************************************/
 
-#include "ml_classifiers/zero_classifier.h"
-#include <pluginlib/class_list_macros.h>
+#include "ml_classifiers/zero_classifier.hpp"
+#include <pluginlib/class_list_macros.hpp>
 
 #include <string>
 #include <vector>

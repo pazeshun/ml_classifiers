@@ -34,10 +34,11 @@
  *
  *********************************************************************/
 
-#ifndef ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
-#define ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
+#ifndef ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
+#define ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
 
-#include "ml_classifiers/classifier.h"
+#include "ml_classifiers/classifier.hpp"
+#include "libsvm-3.14/svm.h"
 
 #include <map>
 #include <string>
@@ -50,13 +51,18 @@ using CPoint = std::vector<double>;
 using CPointList = std::vector<CPoint>;
 using ClassMap = std::map<std::string, CPointList>;
 
-class NearestNeighborClassifier : public Classifier
+class SVMClassifier : public Classifier
 {
 public:
   ClassMap class_data;
+  svm_problem svm_data;
+  svm_model *trained_model;
+  std::map<std::string, int> label_str_to_int;
+  std::map<int, std::string> label_int_to_str;
+  double **scaling_factors;
 
-  NearestNeighborClassifier();
-  ~NearestNeighborClassifier();
+  SVMClassifier();
+  ~SVMClassifier();
 
   void save(const std::string filename);
   bool load(const std::string filename);
@@ -68,4 +74,4 @@ public:
 
 }  // namespace ml_classifiers
 
-#endif  // ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_H
+#endif  // ML_CLASSIFIERS_SVM_CLASSIFIER_HPP

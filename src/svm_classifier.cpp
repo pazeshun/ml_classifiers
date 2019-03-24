@@ -34,8 +34,8 @@
  *
  *********************************************************************/
 
-#include "ml_classifiers/svm_classifier.h"
-#include <pluginlib/class_list_macros.h>
+#include "ml_classifiers/svm_classifier.hpp"
+#include <pluginlib/class_list_macros.hpp>
 #include <cmath>
 #include <string>
 #include <vector>

@@ -34,22 +34,29 @@
  *
  *********************************************************************/
 
-#ifndef ML_CLASSIFIERS_ZERO_CLASSIFIER_H
-#define ML_CLASSIFIERS_ZERO_CLASSIFIER_H
+#ifndef ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_HPP
+#define ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_HPP
 
-#include "ml_classifiers/classifier.h"
+#include "ml_classifiers/classifier.hpp"
 
+#include <map>
 #include <string>
 #include <vector>
 
 namespace ml_classifiers
 {
 
-class ZeroClassifier : public Classifier
+using CPoint = std::vector<double>;
+using CPointList = std::vector<CPoint>;
+using ClassMap = std::map<std::string, CPointList>;
+
+class NearestNeighborClassifier : public Classifier
 {
 public:
-  ZeroClassifier();
-  ~ZeroClassifier();
+  ClassMap class_data;
+
+  NearestNeighborClassifier();
+  ~NearestNeighborClassifier();
 
   void save(const std::string filename);
   bool load(const std::string filename);
@@ -61,4 +68,4 @@ public:
 
 }  // namespace ml_classifiers
 
-#endif  // ML_CLASSIFIERS_ZERO_CLASSIFIER_H
+#endif  // ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_HPP

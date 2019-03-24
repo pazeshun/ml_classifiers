@@ -73,6 +73,7 @@ elseif(${ROS_VERSION} EQUAL 2)
   find_package(ament_cmake REQUIRED)
   find_package(builtin_interfaces REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
+  find_package(pluginlib REQUIRED)
   find_package(std_msgs REQUIRED)
 
   include_directories(
@@ -95,18 +96,18 @@ elseif(${ROS_VERSION} EQUAL 2)
 
 endif()
 
-add_library(ZeroClassifier SHARED
-  src/zero_classifier.cpp) 
 add_library(NearestNeighborClassifier SHARED
   src/nearest_neighbor_classifier.cpp)
 add_library(SVMClassifier SHARED
   src/svm_classifier.cpp
   src/libsvm-3.14/svm.cpp)
+add_library(ZeroClassifier SHARED
+  src/zero_classifier.cpp) 
 
 if(${ROS_VERSION} EQUAL 1)
 
   add_executable(classifier_server
-    nodes/classifier_server.cpp)
+    nodes/ros1_classifier_server.cpp)
 
   target_link_libraries(classifier_server ${catkin_LIBRARIES})
   add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
@@ -116,7 +117,7 @@ if(${ROS_VERSION} EQUAL 1)
     include/ml_classifiers/nearest_neighbor_classifier.h
     include/ml_classifiers/svm_classifier.h
     include/ml_classifiers/zero_classifier.h
-    nodes/classifier_server.cpp
+    nodes/ros1_classifier_server.cpp
     src/nearest_neighbor_classifier.cpp
     src/svm_classifier.cpp
     src/zero_classifier.cpp
@@ -134,12 +135,41 @@ if(${ROS_VERSION} EQUAL 1)
 
 elseif(${ROS_VERSION} EQUAL 2)
 
-  ament_target_dependencies(classifier_server
-    "rclcpp")
+  add_executable(classifier_server
+    nodes/ros2_classifier_server.cpp)
 
-  rosidl_target_interfaces(classifier_server
-    ${PROJECT_NAME}_msgs
-    "rosidl_typesupport_cpp")
+  ament_target_dependencies(NearestNeighborClassifier
+    "pluginlib")
+
+  ament_target_dependencies(SVMClassifier
+    "pluginlib")
+
+  ament_target_dependencies(ZeroClassifier
+    "pluginlib")
+
+  ament_target_dependencies(classifier_server
+    "rclcpp"
+    "pluginlib")
+
+  target_include_directories(classifier_server PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+#  rosidl_target_interfaces(classifier_server
+#    ${PROJECT_NAME}_msgs
+#    "rosidl_typesupport_cpp")
+
+  ament_export_dependencies(rosidl_default_runtime)
+  ament_export_dependencies(pluginlib)
+
+  ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+
+  ament_export_include_directories(include)
+
+  install(
+    DIRECTORY include/
+    DESTINATION include
+  )
 
   install(
     TARGETS
@@ -147,29 +177,15 @@ elseif(${ROS_VERSION} EQUAL 2)
       NearestNeighborClassifier
       ZeroClassifier
       classifier_server
+    EXPORT export_${PROJECT_NAME}
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
   )
 
-  install(
-    DIRECTORY include/
-    DESTINATION include
-  )
-
-  ament_export_dependencies(ament_cmake)
-  ament_export_dependencies(rclcpp)
-  ament_export_dependencies(class_loader)
-
-  ament_export_include_directories(include)
-
-  ament_export_libraries(SVMClassifier)
-  ament_export_libraries(NearestNeighborClassifier)
-  ament_export_libraries(ZeroClassifier)
-
   pluginlib_export_plugin_description_file(ml_classifiers
-    "default_classifiers_plugin.xml")
+    default_classifiers_plugin.xml)
 
   if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
