@@ -103,10 +103,10 @@ add_library(SVMClassifier SHARED
   src/svm_classifier.cpp
   src/libsvm-3.14/svm.cpp)
 
-add_executable(classifier_server
-  nodes/classifier_server.cpp)
-
 if(${ROS_VERSION} EQUAL 1)
+
+  add_executable(classifier_server
+    nodes/classifier_server.cpp)
 
   target_link_libraries(classifier_server ${catkin_LIBRARIES})
   add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
@@ -167,6 +167,9 @@ elseif(${ROS_VERSION} EQUAL 2)
   ament_export_libraries(SVMClassifier)
   ament_export_libraries(NearestNeighborClassifier)
   ament_export_libraries(ZeroClassifier)
+
+  pluginlib_export_plugin_description_file(ml_classifiers
+    "default_classifiers_plugin.xml")
 
   if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
