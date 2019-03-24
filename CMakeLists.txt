@@ -136,24 +136,21 @@ if(${ROS_VERSION} EQUAL 1)
 
 elseif(${ROS_VERSION} EQUAL 2)
 
-  set(dependencies
-    pluginlib)
-
   add_executable(classifier_server
     nodes/ros2_classifier_server.cpp)
 
   ament_target_dependencies(NearestNeighborClassifier
-    ${dependencies})
+    "pluginlib")
 
   ament_target_dependencies(SVMClassifier
-    ${dependencies})
+    "pluginlib")
 
   ament_target_dependencies(ZeroClassifier
-    ${dependencies})
+    "pluginlib")
 
   ament_target_dependencies(classifier_server
     "rclcpp"
-    ${dependencies})
+    "pluginlib")
 
   target_include_directories(classifier_server PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -163,30 +160,48 @@ elseif(${ROS_VERSION} EQUAL 2)
     ${PROJECT_NAME}_interfaces
     "rosidl_typesupport_cpp")
 
-  ament_export_dependencies(rosidl_default_runtime)
-  ament_export_dependencies(pluginlib)
-
-  ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-
-  ament_export_include_directories(include)
-
   install(
     DIRECTORY include/
     DESTINATION include
   )
 
   install(
-    TARGETS
-      SVMClassifier
-      NearestNeighborClassifier
-      ZeroClassifier
-      classifier_server
-    EXPORT export_${PROJECT_NAME}
+    TARGETS classifier_server
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
   )
+
+  install(
+    TARGETS SVMClassifier
+    EXPORT SVMClassifier
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+  )
+
+  install(
+    TARGETS NearestNeighborClassifier
+    EXPORT NearestNeighborClassifier
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+  )
+
+  install(
+    TARGETS ZeroClassifier
+    EXPORT ZeroClassifier
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+  )
+
+  ament_export_dependencies(rosidl_default_runtime)
+  ament_export_dependencies(pluginlib)
+
+  ament_export_include_directories(include)
+
+  ament_export_interfaces(SVMClassifier HAS_LIBRARY_TARGET)
+  ament_export_interfaces(NearestNeighborClassifier HAS_LIBRARY_TARGET)
+  ament_export_interfaces(ZeroClassifier HAS_LIBRARY_TARGET)
 
   pluginlib_export_plugin_description_file(ml_classifiers
     default_classifiers_plugin.xml)
