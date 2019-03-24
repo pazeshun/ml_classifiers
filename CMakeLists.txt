@@ -112,7 +112,7 @@ if(${ROS_VERSION} EQUAL 1)
   target_link_libraries(classifier_server ${catkin_LIBRARIES})
   add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
 
-  SET(ROSLINT_CPP_OPTS "--extensions=h,hpp,cpp")
+  set(ROSLINT_CPP_OPTS "--extensions=h,hpp,cpp")
 
   roslint_cpp(
     include/ml_classifiers/classifier.hpp
