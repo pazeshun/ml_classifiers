@@ -71,6 +71,7 @@ elseif(${ROS_VERSION} EQUAL 2)
   endif()
 
   find_package(ament_cmake REQUIRED)
+  find_package(rclcpp REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
   find_package(pluginlib REQUIRED)
   find_package(std_msgs REQUIRED)
@@ -81,7 +82,7 @@ elseif(${ROS_VERSION} EQUAL 2)
     ${EIGEN3_INCLUDE_DIRS}
   )
 
-  rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
+  rosidl_generate_interfaces(${PROJECT_NAME}
     "msg/ClassDataPoint.msg"
     "srv/AddClassData.srv"
     "srv/ClassifyData.srv"
@@ -152,12 +153,16 @@ elseif(${ROS_VERSION} EQUAL 2)
     "rclcpp"
     "pluginlib")
 
+  target_link_libraries(classifier_server
+    ${rclcpp_LIBRARIES}
+    ${pluginlib_LIBRARIES})
+
   target_include_directories(classifier_server PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
   rosidl_target_interfaces(classifier_server
-    ${PROJECT_NAME}_interfaces
+    ${PROJECT_NAME}
     "rosidl_typesupport_cpp")
 
   install(
