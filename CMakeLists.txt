@@ -81,7 +81,7 @@ elseif(${ROS_VERSION} EQUAL 2)
     ${EIGEN3_INCLUDE_DIRS}
   )
 
-  rosidl_generate_interfaces(pendulum_msgs
+  rosidl_generate_interfaces(${PROJECT_NAME}_msgs
     "msg/ClassDataPoint.msg"
     "srv/AddClassData.srv"
     "srv/ClassifyData.srv"
@@ -138,7 +138,7 @@ elseif(${ROS_VERSION} EQUAL 2)
     "rclcpp")
 
   rosidl_target_interfaces(classifier_server
-    ${PROJECT_NAME}
+    ${PROJECT_NAME}_msgs
     "rosidl_typesupport_cpp")
 
   install(
