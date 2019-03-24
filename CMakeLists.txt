@@ -112,11 +112,13 @@ if(${ROS_VERSION} EQUAL 1)
   target_link_libraries(classifier_server ${catkin_LIBRARIES})
   add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
 
+  SET(ROSLINT_CPP_OPTS "--extensions=h,hpp,cpp")
+
   roslint_cpp(
-    include/ml_classifiers/classifier.h
-    include/ml_classifiers/nearest_neighbor_classifier.h
-    include/ml_classifiers/svm_classifier.h
-    include/ml_classifiers/zero_classifier.h
+    include/ml_classifiers/classifier.hpp
+    include/ml_classifiers/nearest_neighbor_classifier.hpp
+    include/ml_classifiers/svm_classifier.hpp
+    include/ml_classifiers/zero_classifier.hpp
     nodes/ros1_classifier_server.cpp
     src/nearest_neighbor_classifier.cpp
     src/svm_classifier.cpp
