@@ -93,11 +93,12 @@ jobs:
           name: Set Up Container
           command: |
             apt update -qq
-            source `find /opt/ros -maxdepth 2 -name local_setup.bash | sort | head -1` && echo $ROS_DISTRO
+            source `find /opt/ros -maxdepth 2 -name local_setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
       - run:
           name: Build
           command: |
+            source `find /opt/ros -maxdepth 2 -name local_setup.bash | sort | head -1`
             colcon build
     working_directory: ~/src
 
