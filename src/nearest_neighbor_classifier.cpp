@@ -54,7 +54,7 @@ bool NearestNeighborClassifier::load(const std::string filename)
 }
 
 void NearestNeighborClassifier::addTrainingPoint(
-    std::string target_class, const std::vector<double> point)
+  std::string target_class, const std::vector<double> point)
 {
   class_data[target_class].push_back(point);
 }

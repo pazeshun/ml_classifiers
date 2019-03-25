@@ -86,7 +86,7 @@ void SVMClassifier::train()
   // Allocate space for data in an svm_problem structure
   svm_data.l = n_data;
   svm_data.y = new double[n_data];
-  svm_data.x = new svm_node*[n_data];
+  svm_data.x = new svm_node *[n_data];
 
   for (int i = 0; i < n_data; i++) {
     svm_data.x[i] = new svm_node[dims + 1];
@@ -106,7 +106,7 @@ void SVMClassifier::train()
   }
 
   // Find the range of the data in each dim and calc the scaling factors to scale from 0 to 1
-  scaling_factors = new double*[dims];
+  scaling_factors = new double *[dims];
 
   for (int i = 0; i < dims; i++) {
     scaling_factors[i] = new double[2];
@@ -122,10 +122,12 @@ void SVMClassifier::train()
       CPointList cpl = iter->second;
 
       for (size_t i = 0; i < cpl.size(); i++) {
-        if (cpl[i][j] < minval)
+        if (cpl[i][j] < minval) {
           minval = cpl[i][j];
-        if (cpl[i][j] > maxval)
+        }
+        if (cpl[i][j] > maxval) {
           maxval = cpl[i][j];
+        }
       }
     }
 
@@ -194,7 +196,7 @@ void SVMClassifier::train()
   // params.weight_label =
   // params.weight =
 
-  const char *err_str = svm_check_parameter(&svm_data, &params);
+  const char * err_str = svm_check_parameter(&svm_data, &params);
   if (err_str) {
     printf("SVMClassifier::train() -- Bad SVM parameters!\n");
     printf("%s\n", err_str);
@@ -203,7 +205,7 @@ void SVMClassifier::train()
 
   // Grid Search for best C and gamma params
   int n_folds = std::min(10, n_data);  // Make sure there at least as many points as folds
-  double *resp = new double[n_data];
+  double * resp = new double[n_data];
   double best_accy = 0.0;
   double best_g = 0.0;
   double best_c = 0.0;
@@ -294,7 +296,7 @@ std::string SVMClassifier::classifyPoint(const std::vector<double> point)
 {
   // Copy the point to be classified into an svm_node
   int dims = point.size();
-  svm_node* test_pt = new svm_node[dims + 1];
+  svm_node * test_pt = new svm_node[dims + 1];
 
   for (int i = 0; i < dims; i++) {
     test_pt[i].index = i;
