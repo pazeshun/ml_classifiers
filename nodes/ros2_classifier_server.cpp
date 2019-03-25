@@ -52,197 +52,220 @@ using namespace ml_classifiers;  // NOLINT
 using std::string;
 using std::cout;
 using std::endl;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 
-std::map<string, std::shared_ptr<Classifier>> classifier_list;
-pluginlib::ClassLoader<Classifier> c_loader("ml_classifiers", "ml_classifiers::Classifier");
-std::shared_ptr<rclcpp::Node> cl_srv_node;
-
-bool createHelper(string class_type, std::shared_ptr<Classifier> & c)
+class ClassifierServer : public rclcpp::Node
 {
-  try {
-    c = std::shared_ptr<Classifier>(c_loader.createUnmanagedInstance(class_type));
-  } catch (pluginlib::PluginlibException & ex) {
-    RCLCPP_ERROR(
-      cl_srv_node->get_logger(),
-      "Classifer plugin failed to load! Error: %s",
-      ex.what());
+public:
+  ClassifierServer()
+  : Node("classifier_server"),
+    c_loader("ml_classifiers", "ml_classifiers::Classifier")
+  {
+    create_srv = this->create_service<ml_classifiers::srv::CreateClassifier>(
+      "create_classifier",
+      std::bind(&ClassifierServer::createCallback, this, _1, _2, _3));
+    add_srv = this->create_service<ml_classifiers::srv::AddClassData>(
+      "add_class_data",
+      std::bind(&ClassifierServer::addCallback, this, _1, _2, _3));
+    train_srv = this->create_service<ml_classifiers::srv::TrainClassifier>(
+      "train_classifier",
+      std::bind(&ClassifierServer::trainCallback, this, _1, _2, _3));
+    clear_srv = this->create_service<ml_classifiers::srv::ClearClassifier>(
+      "clear_classifier",
+      std::bind(&ClassifierServer::clearCallback, this, _1, _2, _3));
+    save_srv = this->create_service<ml_classifiers::srv::SaveClassifier>(
+      "save_classifier",
+      std::bind(&ClassifierServer::saveCallback, this, _1, _2, _3));
+    load_srv = this->create_service<ml_classifiers::srv::LoadClassifier>(
+      "load_classifier",
+      std::bind(&ClassifierServer::loadCallback, this, _1, _2, _3));
+    classify_srv = this->create_service<ml_classifiers::srv::ClassifyData>(
+      "classify_data",
+      std::bind(&ClassifierServer::classifyCallback, this, _1, _2, _3));
+
+    RCLCPP_INFO(this->get_logger(), "Classifier services now ready");
   }
 
-  return true;
-}
+private:
+  pluginlib::ClassLoader<Classifier> c_loader;
+  std::map<string, std::shared_ptr<Classifier>> classifier_list;
 
-bool createCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::CreateClassifier::Request> req,
-  std::shared_ptr<ml_classifiers::srv::CreateClassifier::Response> res)
-{
-  string id = req->identifier;
-  std::shared_ptr<Classifier> c;
+  rclcpp::Service<ml_classifiers::srv::CreateClassifier>::SharedPtr create_srv;
+  rclcpp::Service<ml_classifiers::srv::AddClassData>::SharedPtr add_srv;
+  rclcpp::Service<ml_classifiers::srv::TrainClassifier>::SharedPtr train_srv;
+  rclcpp::Service<ml_classifiers::srv::ClearClassifier>::SharedPtr clear_srv;
+  rclcpp::Service<ml_classifiers::srv::SaveClassifier>::SharedPtr save_srv;
+  rclcpp::Service<ml_classifiers::srv::LoadClassifier>::SharedPtr load_srv;
+  rclcpp::Service<ml_classifiers::srv::ClassifyData>::SharedPtr classify_srv;
 
-  if (!createHelper(req->class_type, c)) {
-    res->success = false;
-    return false;
+  bool createHelper(string class_type, std::shared_ptr<Classifier> & c)
+  {
+    try {
+      c = std::shared_ptr<Classifier>(c_loader.createUnmanagedInstance(class_type));
+    } catch (pluginlib::PluginlibException & ex) {
+      RCLCPP_ERROR(
+        this->get_logger(),
+        "Classifer plugin failed to load! Error: %s",
+        ex.what());
+      return false;
+    }
+
+    return true;
   }
 
-  if (classifier_list.find(id) != classifier_list.end()) {
-    RCLCPP_INFO(
-      cl_srv_node->get_logger(),
-      "WARNING: ID already exists, overwriting: %s",
-      req->identifier.c_str());
-    classifier_list.erase(id);
+  void createCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::CreateClassifier::Request> req,
+    std::shared_ptr<ml_classifiers::srv::CreateClassifier::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
+    std::shared_ptr<Classifier> c;
+
+    if (!createHelper(req->class_type, c)) {
+      res->success = false;
+    } else {
+      if (classifier_list.find(id) != classifier_list.end()) {
+        RCLCPP_INFO(
+          this->get_logger(),
+          "WARNING: ID already exists, overwriting: %s",
+          req->identifier.c_str());
+        classifier_list.erase(id);
+      }
+
+      classifier_list[id] = c;
+
+      res->success = true;
+    }
   }
 
-  classifier_list[id] = c;
+  void addCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::AddClassData::Request> req,
+    std::shared_ptr<ml_classifiers::srv::AddClassData::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
 
-  res->success = true;
-  return true;
-}
+    if (classifier_list.find(id) == classifier_list.end()) {
+      res->success = false;
+    } else {
+      for (size_t i = 0; i < req->data.size(); i++) {
+        classifier_list[id]->addTrainingPoint(req->data[i].target_class, req->data[i].point);
+      }
 
-bool addCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::AddClassData::Request> req,
-  std::shared_ptr<ml_classifiers::srv::AddClassData::Response> res)
-{
-  string id = req->identifier;
-
-  if (classifier_list.find(id) == classifier_list.end()) {
-    res->success = false;
-    return false;
+      res->success = true;
+    }
   }
 
-  for (size_t i = 0; i < req->data.size(); i++) {
-    classifier_list[id]->addTrainingPoint(req->data[i].target_class, req->data[i].point);
+  void trainCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::TrainClassifier::Request> req,
+    std::shared_ptr<ml_classifiers::srv::TrainClassifier::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
+
+    if (classifier_list.find(id) == classifier_list.end()) {
+      res->success = false;
+    } else {
+      RCLCPP_INFO(
+        this->get_logger(),
+        "Training %s",
+        id.c_str());
+
+      classifier_list[id]->train();
+      res->success = true;
+    }
   }
 
-  res->success = true;
-  return true;
-}
+  void clearCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::ClearClassifier::Request> req,
+    std::shared_ptr<ml_classifiers::srv::ClearClassifier::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
 
-bool trainCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::TrainClassifier::Request> req,
-  std::shared_ptr<ml_classifiers::srv::TrainClassifier::Response> res)
-{
-  string id = req->identifier;
-
-  if (classifier_list.find(id) == classifier_list.end()) {
-    res->success = false;
-    return false;
+    if (classifier_list.find(id) == classifier_list.end()) {
+      res->success = false;
+    } else {
+      classifier_list[id]->clear();
+      res->success = true;
+    }
   }
 
-  RCLCPP_INFO(
-    cl_srv_node->get_logger(),
-    "Training %s",
-    id.c_str());
+  void saveCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::SaveClassifier::Request> req,
+    std::shared_ptr<ml_classifiers::srv::SaveClassifier::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
 
-  classifier_list[id]->train();
-  res->success = true;
-  return true;
-}
-
-bool clearCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::ClearClassifier::Request> req,
-  std::shared_ptr<ml_classifiers::srv::ClearClassifier::Response> res)
-{
-  string id = req->identifier;
-
-  if (classifier_list.find(id) == classifier_list.end()) {
-    res->success = false;
-    return false;
+    if (classifier_list.find(id) == classifier_list.end()) {
+      res->success = false;
+    } else {
+      classifier_list[id]->save(req->filename);
+      res->success = true;
+    }
   }
 
-  classifier_list[id]->clear();
-  res->success = true;
-  return true;
-}
+  void loadCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::LoadClassifier::Request> req,
+    std::shared_ptr<ml_classifiers::srv::LoadClassifier::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
 
-bool saveCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::SaveClassifier::Request> req,
-  std::shared_ptr<ml_classifiers::srv::SaveClassifier::Response> res)
-{
-  string id = req->identifier;
+    std::shared_ptr<Classifier> c;
 
-  if (classifier_list.find(id) == classifier_list.end()) {
-    res->success = false;
-    return false;
+    if (!createHelper(req->class_type, c)) {
+      res->success = false;
+    } else {
+      if (!c->load(req->filename)) {
+        res->success = false;
+      } else {
+        if (classifier_list.find(id) != classifier_list.end()) {
+          RCLCPP_WARN(
+            this->get_logger(),
+            "WARNING: ID already exists, overwriting: %s",
+            req->identifier.c_str());
+          classifier_list.erase(id);
+        }
+        classifier_list[id] = c;
+
+        res->success = true;
+      }
+    }
   }
 
-  classifier_list[id]->save(req->filename);
-  res->success = true;
-  return true;
-}
+  void classifyCallback(
+    const std::shared_ptr<rmw_request_id_t> req_hdr,
+    const std::shared_ptr<ml_classifiers::srv::ClassifyData::Request> req,
+    std::shared_ptr<ml_classifiers::srv::ClassifyData::Response> res)
+  {
+    (void)req_hdr;
+    string id = req->identifier;
 
-bool loadCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::LoadClassifier::Request> req,
-  std::shared_ptr<ml_classifiers::srv::LoadClassifier::Response> res)
-{
-  string id = req->identifier;
-
-  std::shared_ptr<Classifier> c;
-
-  if (!createHelper(req->class_type, c)) {
-    res->success = false;
-    return false;
+    for (size_t i = 0; i < req->data.size(); i++) {
+      string class_num = classifier_list[id]->classifyPoint(req->data[i].point);
+      res->classifications.push_back(class_num);
+    }
   }
-
-  if (!c->load(req->filename)) {
-    res->success = false;
-    return false;
-  }
-
-  if (classifier_list.find(id) != classifier_list.end()) {
-    RCLCPP_WARN(
-      cl_srv_node->get_logger(),
-      "WARNING: ID already exists, overwriting: %s",
-      req->identifier.c_str());
-    classifier_list.erase(id);
-  }
-  classifier_list[id] = c;
-
-  res->success = true;
-  return true;
-}
-
-bool classifyCallback(
-  const std::shared_ptr<rmw_request_id_t> req_hdr,
-  const std::shared_ptr<ml_classifiers::srv::ClassifyData::Request> req,
-  std::shared_ptr<ml_classifiers::srv::ClassifyData::Response> res)
-{
-  string id = req->identifier;
-
-  for (size_t i = 0; i < req->data.size(); i++) {
-    string class_num = classifier_list[id]->classifyPoint(req->data[i].point);
-    res->classifications.push_back(class_num);
-  }
-
-  return true;
-}
+};
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  cl_srv_node = rclcpp::Node::make_shared("classifier_server");
 
-  cl_srv_node->create_service<ml_classifiers::srv::CreateClassifier>(
-    "create_classifier", createCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::AddClassData>(
-    "add_class_data", addCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::TrainClassifier>(
-    "train_classifier", trainCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::ClearClassifier>(
-    "clear_classifier", clearCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::SaveClassifier>(
-    "save_classifier", saveCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::LoadClassifier>(
-    "load_classifier", loadCallback);
-  cl_srv_node->create_service<ml_classifiers::srv::ClassifyData>(
-    "classify_data", classifyCallback);
+  auto node = std::make_shared<ClassifierServer>();
 
-  RCLCPP_INFO(cl_srv_node->get_logger(), "Classifier services now ready");
-  rclcpp::spin(cl_srv_node);
+  rclcpp::spin(node);
 
+  rclcpp::shutdown();
   return 0;
 }
