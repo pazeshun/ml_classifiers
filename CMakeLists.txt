@@ -52,7 +52,7 @@ if(${ROS_VERSION} EQUAL 1)
 
   catkin_package(
     DEPENDS Eigen3
-    CATKIN_DEPENDS message_runtime std_msgs roscpp pluginlib 
+    CATKIN_DEPENDS message_runtime std_msgs roscpp pluginlib
     INCLUDE_DIRS include
     LIBRARIES ZeroClassifier NearestNeighborClassifier SVMClassifier
   )
@@ -102,7 +102,7 @@ add_library(SVMClassifier SHARED
   src/svm_classifier.cpp
   src/libsvm-3.14/svm.cpp)
 add_library(ZeroClassifier SHARED
-  src/zero_classifier.cpp) 
+  src/zero_classifier.cpp)
 
 if(${ROS_VERSION} EQUAL 1)
 
