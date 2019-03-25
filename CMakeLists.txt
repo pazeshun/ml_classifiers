@@ -193,7 +193,7 @@ elseif(${ROS_VERSION} EQUAL 2)
   ament_export_interfaces(ZeroClassifier HAS_LIBRARY_TARGET)
 
   pluginlib_export_plugin_description_file(ml_classifiers
-    default_classifiers_plugin.xml)
+    ros2_default_classifiers_plugin.xml)
 
   if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)

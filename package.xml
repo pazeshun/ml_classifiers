@@ -46,7 +46,7 @@
   <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
-    <ml_classifiers condition="$ROS_VERSION == 1" plugin="${prefix}/default_classifiers_plugin.xml"/>
+    <ml_classifiers condition="$ROS_VERSION == 1" plugin="${prefix}/ros1_default_classifiers_plugin.xml"/>
     <build_type condition="$ROS_VERSION == 1">catkin</build_type>
     <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
   </export>
