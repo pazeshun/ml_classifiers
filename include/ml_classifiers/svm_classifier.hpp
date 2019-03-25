@@ -30,8 +30,8 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
-#define ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
+#ifndef ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_
+#define ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_
 
 #include "libsvm-3.14/svm.h"
 
@@ -53,10 +53,10 @@ class SVMClassifier : public Classifier
 public:
   ClassMap class_data;
   svm_problem svm_data;
-  svm_model *trained_model;
+  svm_model * trained_model;
   std::map<std::string, int> label_str_to_int;
   std::map<int, std::string> label_int_to_str;
-  double **scaling_factors;
+  double ** scaling_factors;
 
   SVMClassifier();
   ~SVMClassifier();
@@ -71,4 +71,4 @@ public:
 
 }  // namespace ml_classifiers
 
-#endif  // ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
+#endif  // ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_

@@ -73,31 +73,27 @@ std::string NearestNeighborClassifier::classifyPoint(const std::vector<double> p
   std::string ans;
   bool first = true;
 
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-  {
+  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
     std::string cname = iter->first;
     CPointList cpl = iter->second;
 
-    for (size_t i = 0; i < cpl.size(); i++)
-    {
+    for (size_t i = 0; i < cpl.size(); i++) {
       double diff = 0;
-      for (size_t j = 0; j < dims; j++)
-      {
+      for (size_t j = 0; j < dims; j++) {
         diff += std::fabs(cpl[i][j] - point[j]);
       }
-      if (first)
-      {
+
+      if (first) {
         first = false;
         min_diff = diff;
         ans = cname;
-      }
-      else if (diff < min_diff)
-      {
+      } else if (diff < min_diff) {
         min_diff = diff;
         ans = cname;
       }
     }
   }
+
   return ans;
 }
 

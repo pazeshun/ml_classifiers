@@ -60,8 +60,7 @@ void SVMClassifier::addTrainingPoint(std::string target_class, const std::vector
 
 void SVMClassifier::train()
 {
-  if (class_data.size() == 0)
-  {
+  if (class_data.size() == 0) {
     printf("SVMClassifier::train() -- No training data available! Doing nothing.\n");
     return;
   }
@@ -71,17 +70,15 @@ void SVMClassifier::train()
   // Count the training data
   int n_data = 0;
   int dims = class_data.begin()->second[0].size();
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-  {
+
+  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
     CPointList cpl = iter->second;
-    if (cpl.size() == 1)
-    {
+
+    if (cpl.size() == 1) {
       // There's a bug in libSVM for classes with only 1 data point,
       // so we will duplicate them later
       n_data += 2;
-    }
-    else
-    {
+    } else {
       n_data += cpl.size();
     }
   }
@@ -90,15 +87,17 @@ void SVMClassifier::train()
   svm_data.l = n_data;
   svm_data.y = new double[n_data];
   svm_data.x = new svm_node*[n_data];
-  for (int i = 0; i < n_data; i++)
+
+  for (int i = 0; i < n_data; i++) {
     svm_data.x[i] = new svm_node[dims + 1];
+  }
 
   // Create maps between string labels and int labels
   label_str_to_int.clear();
   label_int_to_str.clear();
   int label_n = 0;
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-  {
+
+  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
     std::string cname = iter->first;
     label_str_to_int[cname] = label_n;
     label_int_to_str[label_n] = cname;
@@ -108,74 +107,72 @@ void SVMClassifier::train()
 
   // Find the range of the data in each dim and calc the scaling factors to scale from 0 to 1
   scaling_factors = new double*[dims];
-  for (int i = 0; i < dims; i++)
+
+  for (int i = 0; i < dims; i++) {
     scaling_factors[i] = new double[2];
+  }
 
   // Scale each dimension separately
-  for (int j = 0; j < dims; j++)
-  {
+  for (int j = 0; j < dims; j++) {
     // First find the min, max, and scaling factor
     double minval = INFINITY;
     double maxval = -INFINITY;
-    for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-    {
+
+    for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
       CPointList cpl = iter->second;
-      for (size_t i = 0; i < cpl.size(); i++)
-      {
+
+      for (size_t i = 0; i < cpl.size(); i++) {
         if (cpl[i][j] < minval)
           minval = cpl[i][j];
         if (cpl[i][j] > maxval)
           maxval = cpl[i][j];
       }
     }
+
     double factor = maxval - minval;
     double offset = minval;
 
     // Do the scaling and save the scaling factor and offset
-    for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-    {
-      for (size_t i = 0; i < iter->second.size(); i++)
-      {
+    for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
+      for (size_t i = 0; i < iter->second.size(); i++) {
         iter->second[i][j] = (iter->second[i][j] - offset) / factor;
       }
     }
+
     scaling_factors[j][0] = offset;
     scaling_factors[j][1] = factor;
   }
 
   // Put the training data into the svm_problem
   int n = 0;
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++)
-  {
+  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
     std::string cname = iter->first;
     CPointList cpl = iter->second;
 
     // Account for bug in libSVM with classes with only 1 data point by duplicating it.
-    if (cpl.size() == 1)
-    {
+    if (cpl.size() == 1) {
       svm_data.y[n] = label_str_to_int[cname];
       svm_data.y[n + 1] = label_str_to_int[cname];
-      for (int j = 0; j < dims; j++)
-      {
+
+      for (int j = 0; j < dims; j++) {
         svm_data.x[n][j].index = j;
         svm_data.x[n][j].value = cpl[0][j] + 0.001;
         svm_data.x[n + 1][j].index = j;
         svm_data.x[n + 1][j].value = cpl[0][j] + 0.001;
       }
+
       svm_data.x[n][dims].index = -1;
       svm_data.x[n + 1][dims].index = -1;
       n = n + 2;
-    }
-    else
-    {
-      for (size_t i = 0; i < cpl.size(); i++)
-      {
+    } else {
+      for (size_t i = 0; i < cpl.size(); i++) {
         svm_data.y[n] = label_str_to_int[cname];
-        for (int j = 0; j < dims; j++)
-        {
+
+        for (int j = 0; j < dims; j++) {
           svm_data.x[n][j].index = j;
           svm_data.x[n][j].value = cpl[i][j];
         }
+
         svm_data.x[n][dims].index = -1;
         n = n + 1;
       }
@@ -198,8 +195,7 @@ void SVMClassifier::train()
   // params.weight =
 
   const char *err_str = svm_check_parameter(&svm_data, &params);
-  if (err_str)
-  {
+  if (err_str) {
     printf("SVMClassifier::train() -- Bad SVM parameters!\n");
     printf("%s\n", err_str);
     return;
@@ -213,10 +209,8 @@ void SVMClassifier::train()
   double best_c = 0.0;
 
   // First, do a coarse search
-  for (double c = -5.0; c <= 15.0; c += 2.0)
-  {
-    for (double g = 3.0; g >= -15.0; g -= 2.0)
-    {
+  for (double c = -5.0; c <= 15.0; c += 2.0) {
+    for (double g = 3.0; g >= -15.0; g -= 2.0) {
       params.gamma = pow(2, g);
       params.C = pow(2, c);
 
@@ -224,13 +218,15 @@ void SVMClassifier::train()
 
       // Figure out the accuracy using these params
       int correct = 0;
-      for (int i = 0; i < n_data; i++)
-      {
-        if (resp[i] == svm_data.y[i])
+
+      for (int i = 0; i < n_data; i++) {
+        if (resp[i] == svm_data.y[i]) {
           ++correct;
+        }
+
         double accy = static_cast<double>(correct) / static_cast<double>(n_data);
-        if (accy > best_accy)
-        {
+
+        if (accy > best_accy) {
           best_accy = accy;
           best_g = params.gamma;
           best_c = params.C;
@@ -244,24 +240,24 @@ void SVMClassifier::train()
   double end_c = best_c + 1.0;
   double start_g = best_g + 1.0;
   double end_g = best_g - 1.0;
-  for (double c = start_c; c <= end_c; c += 0.1)
-  {
-    for (double g = start_g; g >= end_g; g -= 0.1)
-    {
+
+  for (double c = start_c; c <= end_c; c += 0.1) {
+    for (double g = start_g; g >= end_g; g -= 0.1) {
       params.gamma = pow(2, g);
       params.C = pow(2, c);
       svm_cross_validation(&svm_data, &params, n_folds, resp);
 
       // Figure out the accuracy using these params
       int correct = 0;
-      for (int i = 0; i < n_data; i++)
-      {
-        if (resp[i] == svm_data.y[i])
+
+      for (int i = 0; i < n_data; i++) {
+        if (resp[i] == svm_data.y[i]) {
           ++correct;
+        }
+
         double accy = static_cast<double>(correct) / static_cast<double>(n_data);
 
-        if (accy > best_accy)
-        {
+        if (accy > best_accy) {
           best_accy = accy;
           best_g = params.gamma;
           best_c = params.C;
@@ -299,12 +295,13 @@ std::string SVMClassifier::classifyPoint(const std::vector<double> point)
   // Copy the point to be classified into an svm_node
   int dims = point.size();
   svm_node* test_pt = new svm_node[dims + 1];
-  for (int i = 0; i < dims; i++)
-  {
+
+  for (int i = 0; i < dims; i++) {
     test_pt[i].index = i;
     // Scale the point using the training scaling values
     test_pt[i].value = (point[i] - scaling_factors[i][0]) / scaling_factors[i][1];
   }
+
   test_pt[dims].index = -1;
 
   // Classify the point using the currently trained SVM
