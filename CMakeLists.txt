@@ -22,7 +22,6 @@ if(${ROS_VERSION} EQUAL 1)
     std_msgs
     roscpp
     pluginlib
-    roslint
   )
 
   include_directories(
@@ -114,19 +113,11 @@ if(${ROS_VERSION} EQUAL 1)
   target_link_libraries(classifier_server ${catkin_LIBRARIES})
   add_dependencies(classifier_server ${PROJECT_NAME}_generate_messages_cpp)
 
-  set(ROSLINT_CPP_OPTS "--extensions=h,hpp,cpp")
-
-  roslint_cpp()
-
   install(TARGETS classifier_server ZeroClassifier NearestNeighborClassifier SVMClassifier
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
-
-  if(CATKIN_ENABLE_TESTING)
-    roslint_add_test()
-  endif()
 
 elseif(${ROS_VERSION} EQUAL 2)
 
