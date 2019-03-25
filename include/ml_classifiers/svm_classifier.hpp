@@ -33,12 +33,13 @@
 #ifndef ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
 #define ML_CLASSIFIERS_SVM_CLASSIFIER_HPP
 
-#include "ml_classifiers/classifier.hpp"
 #include "libsvm-3.14/svm.h"
 
 #include <map>
 #include <string>
 #include <vector>
+
+#include "ml_classifiers/classifier.hpp"
 
 namespace ml_classifiers
 {

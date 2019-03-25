@@ -30,6 +30,11 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include <pluginlib/class_loader.h>
+
+#include <string>
+#include <map>
+
 #include "ros/ros.h"
 
 #include "ml_classifiers/zero_classifier.hpp"
@@ -41,10 +46,6 @@
 #include "ml_classifiers/SaveClassifier.h"
 #include "ml_classifiers/LoadClassifier.h"
 #include "ml_classifiers/ClassifyData.h"
-#include <pluginlib/class_loader.h>
-
-#include <string>
-#include <map>
 
 using namespace ml_classifiers;  // NOLINT
 using std::string;
@@ -209,13 +210,20 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "classifier_server");
   ros::NodeHandle n;
 
-  ros::ServiceServer service1 = n.advertiseService("/ml_classifiers/create_classifier", createCallback);
-  ros::ServiceServer service2 = n.advertiseService("/ml_classifiers/add_class_data", addCallback);
-  ros::ServiceServer service3 = n.advertiseService("/ml_classifiers/train_classifier", trainCallback);
-  ros::ServiceServer service4 = n.advertiseService("/ml_classifiers/clear_classifier", clearCallback);
-  ros::ServiceServer service5 = n.advertiseService("/ml_classifiers/save_classifier", saveCallback);
-  ros::ServiceServer service6 = n.advertiseService("/ml_classifiers/load_classifier", loadCallback);
-  ros::ServiceServer service7 = n.advertiseService("/ml_classifiers/classify_data", classifyCallback);
+  ros::ServiceServer service1 = n.advertiseService(
+    "/ml_classifiers/create_classifier", createCallback);
+  ros::ServiceServer service2 = n.advertiseService(
+    "/ml_classifiers/add_class_data", addCallback);
+  ros::ServiceServer service3 = n.advertiseService(
+    "/ml_classifiers/train_classifier", trainCallback);
+  ros::ServiceServer service4 = n.advertiseService(
+    "/ml_classifiers/clear_classifier", clearCallback);
+  ros::ServiceServer service5 = n.advertiseService(
+    "/ml_classifiers/save_classifier", saveCallback);
+  ros::ServiceServer service6 = n.advertiseService(
+    "/ml_classifiers/load_classifier", loadCallback);
+  ros::ServiceServer service7 = n.advertiseService(
+    "/ml_classifiers/classify_data", classifyCallback);
 
   ROS_INFO("Classifier services now ready");
   ros::spin();

@@ -33,10 +33,10 @@
 #ifndef ML_CLASSIFIERS_ZERO_CLASSIFIER_HPP
 #define ML_CLASSIFIERS_ZERO_CLASSIFIER_HPP
 
-#include "ml_classifiers/classifier.hpp"
-
 #include <string>
 #include <vector>
+
+#include "ml_classifiers/classifier.hpp"
 
 namespace ml_classifiers
 {

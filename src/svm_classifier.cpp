@@ -75,9 +75,15 @@ void SVMClassifier::train()
   {
     CPointList cpl = iter->second;
     if (cpl.size() == 1)
-      n_data += 2;    // There's a bug in libSVM for classes with only 1 data point, so we will duplicate them later
+    {
+      // There's a bug in libSVM for classes with only 1 data point,
+      // so we will duplicate them later
+      n_data += 2;
+    }
     else
+    {
       n_data += cpl.size();
+    }
   }
 
   // Allocate space for data in an svm_problem structure
@@ -268,7 +274,12 @@ void SVMClassifier::train()
   params.gamma = best_g;
   params.C = best_c;
 
-  printf("BEST PARAMS  ncl: %i   c: %f   g: %f   accy: %f \n\n", n_classes, best_c, best_g, best_accy);
+  printf(
+    "BEST PARAMS  ncl: %i   c: %f   g: %f   accy: %f \n\n",
+    n_classes,
+    best_c,
+    best_g,
+    best_accy);
 
   // Train the SVM
   trained_model = svm_train(&svm_data, &params);

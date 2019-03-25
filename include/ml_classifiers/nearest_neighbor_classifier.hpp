@@ -33,11 +33,11 @@
 #ifndef ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_HPP
 #define ML_CLASSIFIERS_NEAREST_NEIGHBOR_CLASSIFIER_HPP
 
-#include "ml_classifiers/classifier.hpp"
-
 #include <map>
 #include <string>
 #include <vector>
+
+#include "ml_classifiers/classifier.hpp"
 
 namespace ml_classifiers
 {
