@@ -84,6 +84,23 @@ jobs:
             catkin_test_results
     working_directory: ~/src
 
+  crystal:
+    docker:
+      - image: autonomoustuff/docker-builds:crystal-ros-core
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            apt update -qq
+            source `find /opt/ros -maxdepth 2 -name local_setup.bash | sort | head -1` && echo $ROS_DISTRO
+            rosdep install --from-paths . --ignore-src -y
+      - run:
+          name: Build
+          command: |
+            colcon build
+    working_directory: ~/src
+
 workflows:
   version: 2
   ros_build:
@@ -91,3 +108,4 @@ workflows:
       - kinetic
       - lunar
       - melodic
+      - crystal
