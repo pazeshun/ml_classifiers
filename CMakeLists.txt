@@ -70,6 +70,8 @@ elseif(${ROS_VERSION} EQUAL 2)
     add_compile_options(-Wall -Wextra -Wpedantic)
   endif()
 
+  add_definitions(-DPLUGINLIB__DISABLE_BOOST_FUNCTIONS)
+
   find_package(ament_cmake REQUIRED)
   find_package(rclcpp REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
