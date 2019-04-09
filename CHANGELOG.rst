@@ -2,8 +2,8 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2019-04-09)
+------------------
 * Merge pull request `#2 <https://github.com/astuff/ml_classifiers/issues/2>`_ from astuff/ros-transition
   ROS2 Hybrid Package - now builds in ROS Kinetic/Melodic and ROS2 Crystal
 * ROS2: Making classifier_server a class.
