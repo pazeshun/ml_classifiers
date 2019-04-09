@@ -30,71 +30,45 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "ml_classifiers/nearest_neighbor_classifier.hpp"
-#include <pluginlib/class_list_macros.hpp>
+#ifndef ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_
+#define ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_
 
+#include "libsvm-3.14/svm.h"
+
+#include <map>
 #include <string>
 #include <vector>
-#include <cmath>
 
-PLUGINLIB_EXPORT_CLASS(ml_classifiers::NearestNeighborClassifier, ml_classifiers::Classifier)
+#include "ml_classifiers/classifier.hpp"
 
 namespace ml_classifiers
 {
 
-NearestNeighborClassifier::NearestNeighborClassifier() {}
+using CPoint = std::vector<double>;
+using CPointList = std::vector<CPoint>;
+using ClassMap = std::map<std::string, CPointList>;
 
-NearestNeighborClassifier::~NearestNeighborClassifier() {}
-
-void NearestNeighborClassifier::save(const std::string filename) {}
-
-bool NearestNeighborClassifier::load(const std::string filename)
+class SVMClassifier : public Classifier
 {
-  return false;
-}
+public:
+  ClassMap class_data;
+  svm_problem svm_data;
+  svm_model * trained_model;
+  std::map<std::string, int> label_str_to_int;
+  std::map<int, std::string> label_int_to_str;
+  double ** scaling_factors;
 
-void NearestNeighborClassifier::addTrainingPoint(
-  std::string target_class, const std::vector<double> point)
-{
-  class_data[target_class].push_back(point);
-}
+  SVMClassifier();
+  ~SVMClassifier();
 
-void NearestNeighborClassifier::train() {}
-
-void NearestNeighborClassifier::clear()
-{
-  class_data.clear();
-}
-
-std::string NearestNeighborClassifier::classifyPoint(const std::vector<double> point)
-{
-  size_t dims = point.size();
-  double min_diff = 0;
-  std::string ans;
-  bool first = true;
-
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
-    std::string cname = iter->first;
-    CPointList cpl = iter->second;
-
-    for (size_t i = 0; i < cpl.size(); i++) {
-      double diff = 0;
-      for (size_t j = 0; j < dims; j++) {
-        diff += std::fabs(cpl[i][j] - point[j]);
-      }
-
-      if (first) {
-        first = false;
-        min_diff = diff;
-        ans = cname;
-      } else if (diff < min_diff) {
-        min_diff = diff;
-        ans = cname;
-      }
-    }
-  }
-
-  return ans;
-}
+  void save(const std::string filename);
+  bool load(const std::string filename);
+  void addTrainingPoint(std::string target_class, const std::vector<double> point);
+  void train();
+  void clear();
+  std::string classifyPoint(const std::vector<double> point);
+};
 
 }  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS__SVM_CLASSIFIER_HPP_

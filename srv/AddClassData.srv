@@ -2,7 +2,3 @@ string identifier
 ClassDataPoint[] data
 ---
 bool success
-
-
-
-

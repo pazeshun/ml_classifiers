@@ -30,71 +30,29 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "ml_classifiers/nearest_neighbor_classifier.hpp"
-#include <pluginlib/class_list_macros.hpp>
+#ifndef ML_CLASSIFIERS__CLASSIFIER_HPP_
+#define ML_CLASSIFIERS__CLASSIFIER_HPP_
 
 #include <string>
 #include <vector>
-#include <cmath>
-
-PLUGINLIB_EXPORT_CLASS(ml_classifiers::NearestNeighborClassifier, ml_classifiers::Classifier)
 
 namespace ml_classifiers
 {
 
-NearestNeighborClassifier::NearestNeighborClassifier() {}
-
-NearestNeighborClassifier::~NearestNeighborClassifier() {}
-
-void NearestNeighborClassifier::save(const std::string filename) {}
-
-bool NearestNeighborClassifier::load(const std::string filename)
+class Classifier
 {
-  return false;
-}
+public:
+  Classifier() {}
+  virtual ~Classifier() {}
 
-void NearestNeighborClassifier::addTrainingPoint(
-  std::string target_class, const std::vector<double> point)
-{
-  class_data[target_class].push_back(point);
-}
-
-void NearestNeighborClassifier::train() {}
-
-void NearestNeighborClassifier::clear()
-{
-  class_data.clear();
-}
-
-std::string NearestNeighborClassifier::classifyPoint(const std::vector<double> point)
-{
-  size_t dims = point.size();
-  double min_diff = 0;
-  std::string ans;
-  bool first = true;
-
-  for (ClassMap::iterator iter = class_data.begin(); iter != class_data.end(); iter++) {
-    std::string cname = iter->first;
-    CPointList cpl = iter->second;
-
-    for (size_t i = 0; i < cpl.size(); i++) {
-      double diff = 0;
-      for (size_t j = 0; j < dims; j++) {
-        diff += std::fabs(cpl[i][j] - point[j]);
-      }
-
-      if (first) {
-        first = false;
-        min_diff = diff;
-        ans = cname;
-      } else if (diff < min_diff) {
-        min_diff = diff;
-        ans = cname;
-      }
-    }
-  }
-
-  return ans;
-}
+  virtual void save(const std::string filename) = 0;
+  virtual bool load(const std::string filename) = 0;
+  virtual void addTrainingPoint(std::string target_class, const std::vector<double> point) = 0;
+  virtual void train() = 0;
+  virtual void clear() = 0;
+  virtual std::string classifyPoint(const std::vector<double> point) = 0;
+};
 
 }  // namespace ml_classifiers
+
+#endif  // ML_CLASSIFIERS__CLASSIFIER_HPP_
