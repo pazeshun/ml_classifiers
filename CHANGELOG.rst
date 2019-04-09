@@ -2,6 +2,18 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#2 <https://github.com/astuff/ml_classifiers/issues/2>`_ from astuff/ros-transition
+  ROS2 Hybrid Package - now builds in ROS Kinetic/Melodic and ROS2 Crystal
+* ROS2: Making classifier_server a class.
+* Creating separate ros1/ros2 xml files.
+* ROS1: Removing roslint in favor of ROS2 linting.
+* ROS2: Disabling boost in pluginlib.
+* ROS2: Updating copyrights to conform to ament_copyright.
+* ROS2: Fixing cmake exports.
+* Contributors: Joshua Whitley
+
 0.4.1 (2019-03-21)
 ------------------
 * Replacing typedefs with aliases.
