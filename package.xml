@@ -16,6 +16,8 @@
   <author email="sniekum@cs.utexas.edu">Scott Niekum</author>
   <author email="jwhitley@autonomoustuff.com">Joshua Whitley</author>
 
+  <buildtool_depend>ros_environment</buildtool_depend>
+
   <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
 
