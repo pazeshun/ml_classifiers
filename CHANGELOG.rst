@@ -2,8 +2,8 @@
 Changelog for package ml_classifiers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2019-04-15)
+------------------
 * Merge pull request `#3 <https://github.com/astuff/ml_classifiers/issues/3>`_ from dirk-thomas/patch-1
 * add build dep on ros_environment to ensure the env variable ROS_VERSION is defined
 * Contributors: Dirk Thomas, Joshua Whitley
