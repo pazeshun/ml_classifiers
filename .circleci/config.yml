@@ -56,33 +56,6 @@ jobs:
             catkin_test_results
     working_directory: ~/src
 
-  crystal:
-    docker:
-      - image: autonomoustuff/docker-builds:crystal-ros-core
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt update -qq
-            echo 'source `find /opt/ros -maxdepth 2 -name local_setup.bash | sort | head -1`' >> $BASH_ENV
-            source $BASH_ENV
-            rosdep install --from-paths . --ignore-src -y
-            mkdir $CIRCLE_PROJECT_REPONAME
-            mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
-      - run:
-          name: Build
-          command: |
-            cd ..
-            colcon build
-      - run:
-          name: Test
-          command: |
-            cd ..
-            colcon test
-            colcon test-result
-    working_directory: ~/src
-
   dashing:
     docker:
       - image: autonomoustuff/docker-builds:dashing-ros-core
@@ -116,5 +89,4 @@ workflows:
     jobs:
       - kinetic
       - melodic
-      - crystal
       - dashing
